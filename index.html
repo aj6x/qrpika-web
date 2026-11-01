@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>QRPika</title>
+<meta name="description" content="QRPika, an iPhone app for SOTA activations. Coming soon.">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#066989">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#041c2b">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23005674'/%3E%3Cg fill='none' stroke='%23f3a257' stroke-width='2.4'%3E%3Ccircle cx='16' cy='16' r='4'/%3E%3Ccircle cx='16' cy='16' r='8.5'/%3E%3Ccircle cx='16' cy='16' r='13'/%3E%3C/g%3E%3C/svg%3E">
+<style>
+/* One stage, sized like object-fit: cover, so the lettering and sparkles stay pinned to the art.
+   The image and its parents carry no position or transform: Safari 26.0 drops gain maps to SDR on those. */
+:root{
+  color-scheme:light dark;
+  --bar:#096b82;--ink:#fff3c4;--ink-shadow:#024a63;
+  --a:2;              /* stage aspect ratio */
+  --top:8.6%;--h:7.7cqw;--dir:row;--gap:.27;--lead:0;
+  --l:46.6%;--lt:56.82%;--r:55.07%;--rt:55.93%;--sp:11.2cqw;
+}
+@media (prefers-color-scheme:dark){:root{--bar:#052938;--ink-shadow:#00121d}}
+@media (max-aspect-ratio:5/4){:root{
+  --a:1;
+  --top:11.5%;--h:12.6cqw;
+  --l:43.77%;--lt:60%;--r:59.29%;--rt:59.19%;--sp:20.4cqw;
+}}
+@media (max-aspect-ratio:17/25){:root{
+  --a:.5;
+  --top:13.4%;--h:21cqw;--dir:column;--lead:-.2;
+  --l:40.4%;--lt:57.8%;--r:64.31%;--rt:57.17%;--sp:31.5cqw;
+}}
+html,body{margin:0;height:100%;overflow:hidden}
+html,body{background:var(--bar)}
+body{display:grid;grid-template:100vh/100vw;grid-template:100dvh/100vw;place-items:center}
+.stage{
+  display:grid;
+  width:max(100vw,100vh*var(--a));width:max(100vw,100dvh*var(--a));
+  aspect-ratio:var(--a);
+}
+.stage>*{grid-area:1/1}
+picture,img{display:block;width:100%;height:100%}
+img{dynamic-range-limit:no-limit}
+.over{position:relative;container-type:inline-size}
+h1{
+  position:absolute;left:0;right:0;top:var(--top);margin:0;
+  display:flex;flex-direction:var(--dir);align-items:center;justify-content:center;
+  column-gap:calc(var(--h)*var(--gap));row-gap:calc(var(--h)*var(--lead));
+}
+.word{display:block;height:var(--h);overflow:visible}
+.ink{
+  fill:none;stroke:var(--ink);stroke-width:26;stroke-linecap:round;stroke-linejoin:round;
+  filter:drop-shadow(0 7px 0 var(--ink-shadow));
+}
+.hide{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.spark{
+  position:absolute;width:var(--sp);aspect-ratio:1;margin:calc(var(--sp)/-2) 0 0 calc(var(--sp)/-2);
+  background:url(img/sparkle.png) center/contain no-repeat;
+  opacity:0;pointer-events:none;
+  animation:twinkle 6.4s ease-in-out infinite;
+}
+.spark.l{left:var(--l);top:var(--lt)}
+.spark.r{left:var(--r);top:var(--rt);animation-delay:.32s}
+@media (dynamic-range:high){.spark{background-image:url(img/sparkle.avif)}}
+@keyframes twinkle{
+  0%,58%,100%{opacity:0;transform:scale(.25) rotate(-16deg)}
+  68%{opacity:1;transform:scale(1) rotate(0)}
+  73%{opacity:.75;transform:scale(.78) rotate(4deg)}
+  78%{opacity:1;transform:scale(.92) rotate(7deg)}
+  90%{opacity:0;transform:scale(.35) rotate(18deg)}
+}
+@media (prefers-reduced-motion:reduce){.spark{display:none}}
+</style>
+</head>
+<body>
+<main class="stage">
+  <picture>
+    <source media="(max-aspect-ratio:17/25) and (prefers-color-scheme:dark)" srcset="img/tall-night.jpg">
+    <source media="(max-aspect-ratio:17/25)" srcset="img/tall-day.jpg">
+    <source media="(max-aspect-ratio:5/4) and (prefers-color-scheme:dark)" srcset="img/tablet-night.jpg">
+    <source media="(max-aspect-ratio:5/4)" srcset="img/tablet-day.jpg">
+    <source media="(prefers-color-scheme:dark)" srcset="img/wide-night-1800.jpg 1800w, img/wide-night.jpg 3600w" sizes="max(100vw, 200vh)">
+    <img src="img/wide-day.jpg" srcset="img/wide-day-1800.jpg 1800w, img/wide-day.jpg 3600w" sizes="max(100vw, 200vh)" width="3600" height="1800"
+      alt="A round, gray-tan pika with a mouthful of alpine flowers sits on a mountain summit beside a small radio and a folded topo map, between an inverted V antenna and a yagi.">
+  </picture>
+  <div class="over">
+    <h1><span class="hide">Coming soon</span>
+      <svg class="word" viewBox="-16 -190 760 270" aria-hidden="true"><g class="ink"><path transform="translate(20 4.8) rotate(-2.7 58 -48)" d="M100 -118A68 68 0 1 0 100 -14"/><path transform="translate(172 -4.8) rotate(1.8 48 -48)" d="M48 -96A48 48 0 1 1 47.9 -96Z"/><path transform="translate(304 2.4) rotate(-1.8 62 -48)" d="M0 -96V0M0 -60Q2 -96 32 -96Q60 -96 60 -62V0M60 -62Q62 -96 92 -96Q122 -96 122 -62V0"/><path transform="translate(464 -7.2) rotate(1.8 0 -48)" d="M0 -96V0"/><path transform="translate(500 4.8) rotate(-1.8 38 -48)" d="M0 -96V0M0 -60Q2 -96 38 -96Q74 -96 74 -60V0"/><path transform="translate(612 0) rotate(2.7 47 -48)" d="M46 -96A46 46 0 1 1 45.9 -96ZM93 -96V14Q93 60 44 60Q18 60 4 44"/></g><g fill="#fff"><ellipse cx="464" cy="-161.2" rx="9" ry="13"/><ellipse cx="464" cy="-161.2" rx="9" ry="13" transform="rotate(72 464 -148.2)"/><ellipse cx="464" cy="-161.2" rx="9" ry="13" transform="rotate(144 464 -148.2)"/><ellipse cx="464" cy="-161.2" rx="9" ry="13" transform="rotate(216 464 -148.2)"/><ellipse cx="464" cy="-161.2" rx="9" ry="13" transform="rotate(288 464 -148.2)"/></g><circle cx="464" cy="-148.2" r="8" fill="#f3a257"/></svg>
+      <svg class="word" viewBox="-16 -190 512 270" aria-hidden="true"><g class="ink"><path transform="translate(20 4.8) rotate(-2.7 32 -48)" d="M58 -82Q46 -98 30 -98Q4 -98 4 -74Q4 -54 31 -49Q62 -44 62 -22Q62 2 32 2Q12 2 0 -15"/><path transform="translate(120 -4.8) rotate(1.8 48 -48)" d="M48 -96A48 48 0 1 1 47.9 -96Z"/><path transform="translate(252 2.4) rotate(-1.8 48 -48)" d="M48 -96A48 48 0 1 1 47.9 -96Z"/><path transform="translate(384 -7.2) rotate(1.8 38 -48)" d="M0 -96V0M0 -60Q2 -96 38 -96Q74 -96 74 -60V0"/></g><circle cx="168" cy="-52.8" r="19" fill="none" stroke="#f3a257" stroke-width="9"/><circle cx="300" cy="-45.6" r="19" fill="none" stroke="#f3a257" stroke-width="9"/></svg>
+    </h1>
+    <i class="spark l"></i><i class="spark r"></i>
+  </div>
+</main>
+</body>
+</html>
