@@ -70,11 +70,17 @@ h1{
   90%{opacity:0;transform:scale(.35) rotate(18deg)}
 }
 @media (prefers-reduced-motion:reduce){.spark{display:none}}
+/* the scene follows the visitor's clock (the script below); asleep, no twinkle */
+html[data-at=day]{--bar:#096b82;--ink-shadow:#024a63}
+html[data-at=sunrise]{--bar:#2f5a96;--ink-shadow:#2b4a80}
+html[data-at=sunset]{--bar:#2a1d50;--ink-shadow:#3a1d50}
+html[data-at=night],html[data-at=sleep]{--bar:#052938;--ink-shadow:#00121d}
+html[data-at=sleep] .spark{display:none}
 </style>
 </head>
 <body>
 <main class="stage">
-  <picture>
+  <noscript id="art"><picture>
     <source media="(max-aspect-ratio:17/25) and (prefers-color-scheme:dark)" srcset="img/tall-night.jpg">
     <source media="(max-aspect-ratio:17/25)" srcset="img/tall-day.jpg">
     <source media="(max-aspect-ratio:5/4) and (prefers-color-scheme:dark)" srcset="img/tablet-night.jpg">
@@ -82,7 +88,23 @@ h1{
     <source media="(prefers-color-scheme:dark)" srcset="img/wide-night-1800.jpg 1800w, img/wide-night.jpg 3600w" sizes="max(100vw, 200vh)">
     <img src="img/wide-day.jpg" srcset="img/wide-day-1800.jpg 1800w, img/wide-day.jpg 3600w" sizes="max(100vw, 200vh)" width="3600" height="1800"
       alt="A round, gray-tan pika with a mouthful of alpine flowers sits on a mountain summit beside a small radio and a folded topo map, between an inverted V antenna and a yagi.">
-  </picture>
+  </picture></noscript>
+  <script>
+  // Sunrise, day, sunset, night, then asleep from 10 pm, by the visitor's clock. Sun times are rough, for about 40° of
+  // latitude, with daylight saving and the hemisphere read off the time zone. ?at=sunset (or sunrise, day, night, sleep) to try one.
+  (function(){
+    var d=new Date(),y=d.getFullYear(),jan=new Date(y,0,1).getTimezoneOffset(),jul=new Date(y,6,1).getTimezoneOffset();
+    var h=d.getHours()+d.getMinutes()/60,day=(d-new Date(y,0,0))/864e5;
+    var half=6+1.4*Math.cos(2*Math.PI*(day-172)/365)*(jan<jul?-1:1),noon=12.2+(d.getTimezoneOffset()<Math.max(jan,jul)?1:0);
+    var rise=noon-half,set=noon+half,at=new URLSearchParams(location.search).get('at');
+    if(!/^(sunrise|day|sunset|night|sleep)$/.test(at))
+      at=h>=rise-.75&&h<rise+1.25?'sunrise':h>=rise+1.25&&h<set-1.25?'day':h>=set-1.25&&h<set+.75?'sunset':h>=set+.75&&h<22?'night':'sleep';
+    document.documentElement.dataset.at=at;
+    var art=document.getElementById('art');
+    art.insertAdjacentHTML('afterend',art.textContent.replace(/-(day|night)(?=[-.])/g,'-'+at)
+      .replace(at=='sleep'?'with a mouthful of alpine flowers sits on a mountain summit':/^$/,'sleeps on a mountain summit under the moon, its flowers set down by a paw,'));
+  })();
+  </script>
   <div class="over">
     <h1><span class="hide">Coming soon</span>
       <svg class="word" viewBox="-16 -190 760 270" aria-hidden="true"><g class="ink"><path transform="translate(20 4.8) rotate(-2.7 58 -48)" d="M100 -118A68 68 0 1 0 100 -14"/><path transform="translate(172 -4.8) rotate(1.8 48 -48)" d="M48 -96A48 48 0 1 1 47.9 -96Z"/><path transform="translate(304 2.4) rotate(-1.8 62 -48)" d="M0 -96V0M0 -60Q2 -96 32 -96Q60 -96 60 -62V0M60 -62Q62 -96 92 -96Q122 -96 122 -62V0"/><path transform="translate(464 -7.2) rotate(1.8 0 -48)" d="M0 -96V0"/><path transform="translate(500 4.8) rotate(-1.8 38 -48)" d="M0 -96V0M0 -60Q2 -96 38 -96Q74 -96 74 -60V0"/><path transform="translate(612 0) rotate(2.7 47 -48)" d="M46 -96A46 46 0 1 1 45.9 -96ZM93 -96V14Q93 60 44 60Q18 60 4 44"/></g><g fill="#fff"><ellipse cx="464" cy="-161.2" rx="9" ry="13"/><ellipse cx="464" cy="-161.2" rx="9" ry="13" transform="rotate(72 464 -148.2)"/><ellipse cx="464" cy="-161.2" rx="9" ry="13" transform="rotate(144 464 -148.2)"/><ellipse cx="464" cy="-161.2" rx="9" ry="13" transform="rotate(216 464 -148.2)"/><ellipse cx="464" cy="-161.2" rx="9" ry="13" transform="rotate(288 464 -148.2)"/></g><circle cx="464" cy="-148.2" r="8" fill="#f3a257"/></svg>
